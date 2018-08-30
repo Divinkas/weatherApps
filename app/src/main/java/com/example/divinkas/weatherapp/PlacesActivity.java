@@ -1,5 +1,6 @@
 package com.example.divinkas.weatherapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -7,13 +8,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.divinkas.weatherapp.Adapters.PlacesAdapter;
-import com.example.divinkas.weatherapp.Data.ItemPlaces;
+import com.example.divinkas.weatherapp.Data.ItemTempPlaces;
+import com.example.divinkas.weatherapp.Model.PlacesModel;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.subjects.PublishSubject;
 
 public class PlacesActivity extends AppCompatActivity {
 
@@ -44,22 +46,23 @@ public class PlacesActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        initDefaultPlaces();
+        loadPlaces();
         super.onResume();
     }
 
-    //load all added places
-    private void initDefaultPlaces(){
-        Toast.makeText(this, "load data", Toast.LENGTH_SHORT).show();
+    @SuppressLint("CheckResult")
+    private void loadPlaces(){
+        PlacesModel placesModel = new PlacesModel(this);
+        List<ItemTempPlaces> lstt = placesModel.getListPlaces();
 
-        List<ItemPlaces> lst = new ArrayList<>();
-        for(int  i = 0; i<5; i++){
-            ItemPlaces itemPlaces = new ItemPlaces();
-            itemPlaces.setName("name " + i);
-            lst.add(itemPlaces);
-        }
+        PublishSubject<List<ItemTempPlaces>> subject;
+        subject = PublishSubject.create();
+        subject
+                .map(lst ->new PlacesAdapter(this, lst))
+                .subscribe(rvContainer::setAdapter);
 
-        rvContainer.setAdapter(new PlacesAdapter(this, lst));
+        subject.onNext(lstt);
+        //rvContainer.setAdapter(new PlacesAdapter(this, placesModel.getListPlaces()));
 
     }
 

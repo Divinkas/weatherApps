@@ -1,27 +1,30 @@
 package com.example.divinkas.weatherapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.divinkas.weatherapp.Data.ItemPlaces;
+import com.example.divinkas.weatherapp.Data.ItemTempPlaces;
+import com.example.divinkas.weatherapp.Model.PlacesModel;
 import com.example.divinkas.weatherapp.R;
+import com.example.divinkas.weatherapp.WeatherActivity;
 
 import java.util.List;
 
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder>{
     private Context context;
     private LayoutInflater inflater;
-    private List<ItemPlaces> itemPlacesList;
+    private List<ItemTempPlaces> itemPlacesList;
 
-    public PlacesAdapter(Context context, List<ItemPlaces> lst) {
+    public PlacesAdapter(Context context, List<ItemTempPlaces> lst) {
         this.context = context;
         inflater = LayoutInflater.from(this.context);
         itemPlacesList = lst;
@@ -37,11 +40,16 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.tvNamePlace.setText(itemPlacesList.get(position).getName());
         holder.dellPlace.setOnClickListener((v)->{
+                PlacesModel placesModel = new PlacesModel(context);
+                placesModel.dellPlaces(itemPlacesList.get(position).getLat(), itemPlacesList.get(position).getLon());
                 itemPlacesList.remove(position);
                 notifyDataSetChanged();
         });
         holder.open.setOnClickListener((v)->{
-            Toast.makeText(context, "open by id " + position, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, WeatherActivity.class);
+            intent.putExtra("lat", String.valueOf(itemPlacesList.get(position).getLat()));
+            intent.putExtra("lon", String.valueOf(itemPlacesList.get(position).getLon()));
+            context.startActivity(intent);
         });
     }
 

@@ -1,8 +1,11 @@
 package com.example.divinkas.weatherapp;
 
-import android.support.v4.app.FragmentActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 
+import com.example.divinkas.weatherapp.Model.PlacesModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -16,9 +19,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     SupportMapFragment mapFragment;
     GoogleMap map;
-    final String TAG = "myLogs";
-    private static final double TARGET_LATITUDE = 17.893366;
-    private static final double TARGET_LONGITUDE = 19.511868;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,19 +27,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT_NAME);
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        init();
     }
 
     private void init(){
-
+        map.setOnMapClickListener((LatLng latLng) -> {
+            map.clear();
+            map.addMarker(new MarkerOptions().position(latLng));
+            new AlertDialog.Builder(this)
+                    .setTitle("Add to places?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        PlacesModel placesModel = new PlacesModel(this);
+                        placesModel.AddPlace(latLng.latitude, latLng.longitude);
+                        Intent intent = new Intent(this, PlacesActivity.class);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> map.clear())
+                    .show();
+        });
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
+        if (map!=null){ init(); }
     }
+
 }

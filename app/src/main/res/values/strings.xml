@@ -2,7 +2,7 @@
     <string name="app_name">Weather</string>
     <string name="place">Places</string>
     <string name="map">Map</string>
-    <string name="weather">Wt</string>
+    <string name="weather">Weather</string>
 
     <string name="btn_ok">Ok</string>
     <string name="btn_cancel">Cancel</string>
@@ -14,4 +14,12 @@
 
     <string name="test_places">London</string>
     <string name="title_activity_maps">Map</string>
+
+
+    <string name="temp">Temp:</string>
+    <string name="wt">Weather:</string>
+    <string name="lat">LAT:</string>
+    <string name="lon">LON:</string>
+
+
 </resources>

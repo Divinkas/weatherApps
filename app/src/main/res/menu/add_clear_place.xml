@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group
         android:id="@+id/add_clear_group">
         <item
             android:id="@+id/add_place_btn"
+            android:icon="@drawable/done"
+            app:showAsAction="ifRoom"
             android:title="@string/btn_add_places" />
         <item
             android:id="@+id/cancel_place_btn"
+            android:icon="@drawable/close_white"
+            app:showAsAction="ifRoom"
             android:title="@string/btn_cancel" />
     </group>
 </menu>
